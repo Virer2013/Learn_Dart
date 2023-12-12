@@ -1,22 +1,25 @@
-import 'dart:html';
-
 void main() {
-  print("The Main program: Starts");
-  printFileContent();
-  print("The Main program: Ends");
-}
+  // Класс Future<T>, где T - тип возвращаемого результата
 
-printFileContent() {
-  Future<String> fileContent = downloadFile();
-  fileContent.then((resultString) {
-    print("The content on the file is --> $resultString");
-  }).catchError((error) => print("The file not found"));
-}
+  print('Запуск функции main()');
 
-Future<String> downloadFile() {
-  Future<String> result = Future.delayed(Duration(seconds: 5), () {
-    return HttpRequest.getString('https://dart.dev/f/dailyNewsDigest.txt');
+  final myFuture = Future.delayed(Duration(seconds: 3), () {
+    print('Future начал выполняться');
+    return 'Данные успешно загружены';
+    // throw 'Сервер не отвечает';
   });
 
-  return result;
+  myFuture
+      .then((value) => value.split(''))
+      .then((value) => value.map((e) => e.toUpperCase()))
+      .then((result) => print('Результат: $result'))
+      .catchError(
+        (error) => print('Ошибка: $error'),
+        test: (error) => error.runtimeType == String,
+      )
+      .whenComplete(() => print('Future завершил свою работу'));
+
+  print(myFuture);
+
+  print('Завершение работы функции main()');
 }
